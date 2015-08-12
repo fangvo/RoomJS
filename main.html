@@ -1,0 +1,59 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+</head>
+
+<body>
+
+<div class="section">
+
+<table>
+<tr>
+<td valign="top">
+<div id="canvas" style="overflow:hidden;position:relative;width:613px;height:370px;border:#999999 1px solid;"></div>
+<br>
+</table>
+<!-- <table>
+<tr><td><b>Pen Width:</b></td><td><input id="penwidth" type="text" value="1" size="20"/></td></tr>
+<tr><td><b>Color:</b></td><td><input id="color" type="text" value="#0000ff" size="20"/></td></tr>
+</table> -->
+
+<br>
+
+<table>
+
+<tr><td>
+<input style="font-weight:bold;width:200px;" type="button" value="Провести диагонали" onclick="addTable();"/>
+<br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="Обновить длину линии" onclick=""/>
+<br><br>
+</td><td>
+<input style="font-weight:bold;width:200px;" type="button" value="Сохранить" onclick="getLineArray();"/>
+<br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="Вставить" onclick="Set();"/>
+<br><br>
+</td><td>
+
+<input style="font-weight:bold;width:200px;" type="button" value="Удалить последнюю" onclick="deleteLastPoint();"/><br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="Очистить окно" onclick="clearCanvasM();"/>
+
+<br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="test" onclick="getTriangle()"/>
+<br><br>
+</td></tr>
+</table>
+
+<div id="dTable">
+</div>
+
+</div>
+
+
+<script src="jsDraw2D.js" type="text/javascript"></script>
+<script src="test2.js" type="text/javascript"></script>
+
+
+</body>
+
+</html>
