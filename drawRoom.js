@@ -302,7 +302,7 @@ function findDiaganals2() {
 	diaganalsArray = new Array();
 	triangle = new Array();
 
-	lineArray = getLineArray();
+	var lineArray = getLineArray();
 
 	var polygon = deepCopy(points);
 	while (polygon.length > 3) {
@@ -321,43 +321,41 @@ function findDiaganals2() {
 				Type : 1
 			});
 
-			var c = lineLen(polygon[0].xy, polygon[1].xy),
-			a = lineLen(polygon[1].xy, polygon[2].xy),
-			b = lineLen(polygon[2].xy, polygon[0].xy)
+			// var c = lineLen(polygon[0].xy, polygon[1].xy), a = lineLen(polygon[1].xy, polygon[2].xy), b = lineLen(polygon[2].xy, polygon[0].xy);
 
-				triangle.push([{
-							Points : {
-								Start : polygon[0].xy,
-								End : polygon[1].xy
-							},
-							PName : {
-								Start : polygon[0].name,
-								End : polygon[1].name
-							},
-							Len : lineLen(polygon[0].xy, polygon[1].xy)
-						}, {
-							Points : {
-								Start : polygon[1].xy,
-								End : polygon[2].xy
-							},
-							PName : {
-								Start : polygon[1].name,
-								End : polygon[2].name
-							},
-							Len : lineLen(polygon[1].xy, polygon[2].xy)
-						}, {
-							Points : {
-								Start : polygon[2].xy,
-								End : polygon[0].xy
-							},
-							PName : {
-								Start : polygon[2].name,
-								End : polygon[0].name
-							},
-							Len : lineLen(polygon[2].xy, polygon[0].xy)
-						}
+			triangle.push([{
+						Points : {
+							Start : polygon[0].xy,
+							End : polygon[1].xy
+						},
+						PName : {
+							Start : polygon[0].name,
+							End : polygon[1].name
+						},
+						Len : lineLen(polygon[0].xy, polygon[1].xy)
+					}, {
+						Points : {
+							Start : polygon[1].xy,
+							End : polygon[2].xy
+						},
+						PName : {
+							Start : polygon[1].name,
+							End : polygon[2].name
+						},
+						Len : lineLen(polygon[1].xy, polygon[2].xy)
+					}, {
+						Points : {
+							Start : polygon[2].xy,
+							End : polygon[0].xy
+						},
+						PName : {
+							Start : polygon[2].name,
+							End : polygon[0].name
+						},
+						Len : lineLen(polygon[2].xy, polygon[0].xy)
+					}
 
-					]);
+				]);
 
 			polygon.splice(1, 1);
 		} else {
@@ -842,7 +840,7 @@ function addTable() {
 
 					var textid = this.id.split("-");
 
-					if (tableArray[textid[1]].Len == this.value) {
+					if (Math.round(tableArray[textid[1]].Len) == this.value) {
 						return;
 					}
 
@@ -1188,10 +1186,12 @@ function drawTriangle(_name, _ta, len) {
 
 	var tra = _ta;
 	var name = [_name.Start, _name.End];
+	
+	var tLen = len;
 
 	console.log("Cheking: " + name[0] + name[1])
 
-	for (var i = 0; i < tra.length; i++) {
+	for (var i = 0; i < tra.length;) {
 		var count = 0;
 		if (name.some(elementIsInArray, tra[i][1].PName.Start)) {
 			count++;
@@ -1211,6 +1211,7 @@ function drawTriangle(_name, _ta, len) {
 			for (var l = 0; l < 3; l++) {
 				if ((tt[l].PName.Start == name[0] || tt[l].PName.Start == name[1]) && (tt[l].PName.End == name[0] || tt[l].PName.End == name[1])) {
 					lineid = l;
+					break;
 				}
 			}
 
@@ -1260,11 +1261,11 @@ function drawTriangle(_name, _ta, len) {
 				break;
 			}
 
-			if (len) {
+			if (tLen) {
 
 				var mc = new jsPoint((x1 + x2) / 2, (y1 + y2) / 2);
 
-				var mL = len / 2;
+				var mL = tLen / 2;
 
 				var ma = Math.atan2((y2 - mc.y), (x2 - mc.x)),
 				mb = Math.atan2((y1 - mc.y), (x1 - mc.x));
@@ -1277,13 +1278,14 @@ function drawTriangle(_name, _ta, len) {
 
 				ChangeCoords(tt[lineid].PName.Start, x1, y1);
 				ChangeCoords(tt[lineid].PName.End, x2, y2);
+				
+				tLen = null;
 
 			}
 
 			var tResult = getCrossPoints({
 					x : x1,
-					y,
-					y1,
+					y : y1,
 					radius : a
 				}, {
 					x : x2,
@@ -1329,6 +1331,7 @@ function drawTriangle(_name, _ta, len) {
 
 			return tra;
 		}
+		i++;
 	}
 	console.log("Nothing Found")
 
