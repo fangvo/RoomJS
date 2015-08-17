@@ -11,7 +11,8 @@
 <table>
 <tr>
 <td valign="top">
-<div id="canvas" style="overflow:hidden;position:relative;width:613px;height:370px;border:#999999 1px solid;"></div>
+<canvas id="canvas" width="600" height="480" style="overflow:hidden;position:relative;border:#999999 1px solid;"></canvas>
+<!-- <div id="canvas" style="overflow:hidden;position:relative;width:613px;height:370px;border:#999999 1px solid;"></div> -->
 <br>
 </table>
 <!-- <table>
@@ -39,9 +40,15 @@
 <input style="font-weight:bold;width:200px;" type="button" value="Очистить окно" onclick="clearCanvasM();"/>
 
 <br><br>
-<input style="font-weight:bold;width:200px;" type="button" value="test" onclick="getTriangle()"/>
+<input style="font-weight:bold;width:200px;" type="button" value="test" onclick="reDrawAll()"/>
 <br><br>
-</td></tr>
+</td><td>
+
+</td>
+<input style="font-weight:bold;width:200px;" type="button" value="s" onclick="s();"/><br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="l" onclick="l();"/><br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="t" onclick="t();"/>
+</tr>
 </table>
 
 <div id="dTable">
@@ -50,7 +57,7 @@
 </div>
 
 
-<script src="jsDraw2D.js" type="text/javascript"></script>
+<!-- <script src="jsDraw2D.js" type="text/javascript"></script> -->
 <script src="drawRoom.js" type="text/javascript"></script>
 
 
