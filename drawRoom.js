@@ -5,9 +5,8 @@ var midRadius = 2;
 var midRadiusInv = 10;
 var debug = false;
 var canvas = document.getElementById('canvas'), ctx = canvas.getContext("2d"), cw = canvas.width, ch = canvas.height;
-// ctx.translate(cw/2,ch/2)
 drawGrid();
-var drag = null, notFinished = true, points = new Array(), tableArray, diaganalsArray, lArray, triangle;
+var drag = null, notFinished = true, points = new Array(),midPoints,pointsDC, tableArray, diaganalsArray, lArray, triangle , triangleDC;
 canvas.onclick = onClick;
 function drawGrid() {
 	var path = new Path2D();
@@ -60,6 +59,9 @@ function onClick(e) {
 			if (points.length > 2 && points[0].xy.x == cp.x && points[0].xy.y == cp.y) {
 				notFinished = false;
 				SortAndDraw();
+				addTable();
+				var myCB = document.getElementById('myCB')
+				myCB.disabled = false;
 				return;
 			}
 			for (var i = 0; i < points.length; i++) {
@@ -175,7 +177,7 @@ function inCircleCheck(pa, radius, click_p) {
 	}
 	return null;
 }
-function Draw(nclear) {
+function Draw(nclear,color) {
 	if (points.length < 2) {
 		alert("min 2 points");
 		return false;
@@ -183,23 +185,18 @@ function Draw(nclear) {
 	if (!nclear) {
 		clearCanvas();
 	}
+	var lineColor;
+	if (!color){lineColor= 'rgb(201, 44, 44)'}else{lineColor = color}
 	midPoints = new Array();
 	drawArray = getLineArray();
 	var lPath = new Path2D();
 	var conerDots = new Path2D();
 	var midDots = new Path2D();
 	for (var i = 0; i < drawArray.length; i++) {
-		ctx.fillStyle = 'rgb(0,0,0)';
 		conerDots.moveTo(drawArray[i].Points.Start.x, drawArray[i].Points.Start.y);
 		conerDots.arc(drawArray[i].Points.Start.x, drawArray[i].Points.Start.y, conerRadius, 0, Math.PI * 2, true);
 		lPath.moveTo(drawArray[i].Points.Start.x, drawArray[i].Points.Start.y);
 		lPath.lineTo(drawArray[i].Points.End.x, drawArray[i].Points.End.y)
-		if (debug) {
-			var t = "(" + drawArray[i].Points.Start.x + ":" + drawArray[i].Points.Start.y + ")"
-				gr.drawText(t, new jsPoint(drawArray[i].Points.Start.x, drawArray[i].Points.Start.y + 10));
-		} else {
-			ctx.fillText(drawArray[i].PName.Start, drawArray[i].Points.Start.x, drawArray[i].Points.Start.y + 10);
-		}
 		tp = {
 			xy : new jsPoint((drawArray[i].Points.Start.x + drawArray[i].Points.End.x) / 2, (drawArray[i].Points.Start.y + drawArray[i].Points.End.y) / 2)
 		}
@@ -207,17 +204,30 @@ function Draw(nclear) {
 		midDots.arc(tp.xy.x, tp.xy.y, midRadius, 0, Math.PI * 2, true);
 		midPoints.push(tp);
 	}
-	ctx.strokeStyle = 'rgb(201, 44, 44)';
+	ctx.strokeStyle = lineColor;
 	lPath.closePath();
 	ctx.stroke(lPath);
 	ctx.fillStyle = 'rgb(215, 44, 44)';
 	ctx.fill(conerDots);
 	ctx.fillStyle = 'rgb(43, 44, 201)';
 	ctx.fill(midDots);
+	
+	t();
 }
-function drawDia() {
-
-	clearCanvas();
+function drawDia(color,clear) {
+	
+	if (notFinished) {
+		alert("Завершите фигуру. (щелчок по первой 'Большая красная' точке фигуры) ");
+		return;
+	}
+	
+	if (!clear){clearCanvas();}
+	// var myCB = document.getElementById('myCB')
+	// if (myCB.checked){
+		// drawGrid();
+	// }
+	
+	
 	var lPath = new Path2D();
 	for (var i = 0; i < diaganalsArray.length; i++) {
 		
@@ -232,11 +242,14 @@ function drawDia() {
 		lPath.closePath();
 		ctx.stroke(lPath);
 	}
-	Draw(true);
+	Draw(true,color);
 }
 function clearCanvas() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawGrid();
+	var myCB = document.getElementById('myCB')
+	if (myCB.checked){
+		drawGrid();
+	}
 }
 function getLineArray() {
 	if (notFinished) {
@@ -422,7 +435,10 @@ function clearCanvasM() {
 		myTableDiv.removeChild(myTableDiv.firstChild);
 	}
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawGrid();
+	var myCB = document.getElementById('myCB')
+	if (myCB.checked){
+		drawGrid();
+	}
 	points = new Array();
 	midPoints = new Array();
 	firstPoint = null;
@@ -437,6 +453,8 @@ function addTable() {
 	tableArray = findDiaganals2();
 	drawDia();
 	var tbindex = 0;
+	triangleDC = deepCopy(triangle);
+	pointsDC = deepCopy(points)
 	var myTableDiv = document.getElementById("dTable");
 	if (myTableDiv.hasChildNodes()) {
 		myTableDiv.removeChild(myTableDiv.firstChild);
@@ -473,7 +491,8 @@ function addTable() {
 						return;
 					}
 					// var tta = deepCopy(triangle);
-					updateLen(tableArray[textid[1]].PName, triangle, this.value);
+					tableArray[textid[1]].Len = this.value
+					updateLen(tableArray[textid[1]].PName, triangleDC, this.value);
 					// update2(tableArray[textid[1]].PName, triangle, this.value);
 					return;
 				});
@@ -747,9 +766,11 @@ function updateLen(_name,_ta,_len){
 
 function reDrawAll(){
 	
-	var tta = deepCopy(triangle);
-	drawTriangle(tta[0][0].PName,tta,tta[0][0].Len)
-	drawDia();
+	// var tta = deepCopy(triangle);
+	var tmp = deepCopy(triangleDC);
+	drawTriangle(triangleDC[0][0].PName,triangleDC,triangleDC[0][0].Len)
+	triangleDC = tmp;
+	drawDia('rgb(0, 0, 0)');
 }
 
 function drawTriangle(_name, _ta, len) {
@@ -832,6 +853,13 @@ function drawTriangle(_name, _ta, len) {
 					y : y2,
 					radius : b
 				});
+				
+			if (tResult.count == 0){
+				alert("Ошибка построения фигуры");
+				points = pointsDC;
+				addTable();
+				return;
+				}
 			if (isLeft(tt[0].Points.Start, tt[1].Points.Start, tt[2].Points.Start) == isLeft(new jsPoint(x1, y1), new jsPoint(x2, y2), tResult.pos1)) {
 				result = tResult.pos1
 			} else {
@@ -887,20 +915,73 @@ function sgn(x) {
 	return (x > 0) - (x < 0);
 }
 
-
-function s(){
-	ctx.save();
+function rl(){
+	var c = centroid(points);
+	
+	for (var i in points){
+		var p = points[i].xy;
+		var dx = p.x - c.x,dy = p.y - c.y;
+		var angle =  -Math.PI/8;
+		var dx2 = dx * Math.cos(angle) - dy * Math.sin(angle);
+		var dy2 = dx * Math.sin(angle) + dy * Math.cos(angle);
+		points[i].xy.x = dx2 + c.x;
+		points[i].xy.y = dy2 + c.y;
+		
+	}
+	
+	drawDia();
+	
+	// clearCanvas();
+	// ctx.translate(cw/2, ch/2);
+	// ctx.rotate(10 * Math.PI / 180);
+	// ctx.translate(-cw/2, -ch/2);
+	// drawDia('rgb(0, 0, 0)',true);
 }
 
-function l(){
-	ctx.restore();
+function rr(){
+	movePoints(5,5);
+	drawDia();
 }
+
+function movePoints(x,y){
+	for(var i in points){
+		points[i].xy.x += x;
+		points[i].xy.y += y;
+	}
+}
+
+function centroid(pA)  {
+    var centroidX = 0, centroidY = 0;
+
+        for(var p in pA) {
+            centroidX += pA[p].xy.x;
+            centroidY += pA[p].xy.y;
+        }
+    return {x:centroidX / pA.length, y: centroidY / pA.length};
+}
+
+// function t(){
+	
+	// var dataURL = canvas.toDataURL();
+    // document.getElementById('canvasImg').src = dataURL;
+	
+// }
+
 function t(){
-	ctx.translate(cw/2,ch/2);
+	
+	ctx.font = "14px serif";
+	ctx.fillStyle = 'rgb(0,0,0)';
+	if (tableArray){
+	for (var i in midPoints){
+		ctx.fillText(Math.round(tableArray[i].Len), midPoints[i].xy.x, midPoints[i].xy.y + 10);
+	}
+	}
+	
+	for (var i in points){
+		
+		ctx.fillText(points[i].name, points[i].xy.x, points[i].xy.y + 15);
+	}
 }
-
-
-
 
 
 

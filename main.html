@@ -14,7 +14,11 @@
 <canvas id="canvas" width="600" height="480" style="overflow:hidden;position:relative;border:#999999 1px solid;"></canvas>
 <!-- <div id="canvas" style="overflow:hidden;position:relative;width:613px;height:370px;border:#999999 1px solid;"></div> -->
 <br>
-</table>
+</tr>
+<!-- <tr><td>
+<img id="canvasImg" alt="Right click to save me!">
+</td></tr>
+</table> -->
 <!-- <table>
 <tr><td><b>Pen Width:</b></td><td><input id="penwidth" type="text" value="1" size="20"/></td></tr>
 <tr><td><b>Color:</b></td><td><input id="color" type="text" value="#0000ff" size="20"/></td></tr>
@@ -25,30 +29,29 @@
 <table>
 
 <tr><td>
+<!-- <checkbox id="myCB" checked="true" label="Case sensitive"> </checkbox> -->
+<input type="checkbox" id="myCB" checked="true" disabled = "true" onclick = "drawDia()"> Сетка <br><br>
 <input style="font-weight:bold;width:200px;" type="button" value="Провести диагонали" onclick="addTable();"/>
 <br><br>
-<input style="font-weight:bold;width:200px;" type="button" value="Обновить длину линии" onclick=""/>
+<input style="font-weight:bold;width:200px;" type="button" value="Обновить длину линии" onclick="reDrawAll()"/>
 <br><br>
 </td><td>
+<br><br>
 <input style="font-weight:bold;width:200px;" type="button" value="Сохранить" onclick="getLineArray();"/>
 <br><br>
 <input style="font-weight:bold;width:200px;" type="button" value="Вставить" onclick="Set();"/>
 <br><br>
 </td><td>
-
+<br><br>
 <input style="font-weight:bold;width:200px;" type="button" value="Удалить последнюю" onclick="deleteLastPoint();"/><br><br>
-<input style="font-weight:bold;width:200px;" type="button" value="Очистить окно" onclick="clearCanvasM();"/>
+<input style="font-weight:bold;width:200px;" type="button" value="Очистить окно" onclick="clearCanvasM();"/><br><br>
+</td></tr>
+<tr><td>
+<input style="font-weight:bold;width:200px;" type="button" value="rl" onclick="rl();"/><br><br>
+<input style="font-weight:bold;width:200px;" type="button" value="rr" onclick="rr();"/><br><br>
+<!-- <input style="font-weight:bold;width:200px;" type="button" value="t" onclick="t();"/> -->
+</td></tr>
 
-<br><br>
-<input style="font-weight:bold;width:200px;" type="button" value="test" onclick="reDrawAll()"/>
-<br><br>
-</td><td>
-
-</td>
-<input style="font-weight:bold;width:200px;" type="button" value="s" onclick="s();"/><br><br>
-<input style="font-weight:bold;width:200px;" type="button" value="l" onclick="l();"/><br><br>
-<input style="font-weight:bold;width:200px;" type="button" value="t" onclick="t();"/>
-</tr>
 </table>
 
 <div id="dTable">
