@@ -199,10 +199,12 @@ function handleMouseUp(e) {
 	cp = new jsPoint(x, y);
 
 	if (drag != undefined) {
-		if (inCircleCheck(points, conerRadius, e)) {
+		if (inCircleCheck(points, conerRadius, e)!= undefined) {
 			points.splice(drag, 1);
 			SortAndDraw();
 			drag = null;
+			isDown = false;
+			ctxjq.clearRect(0, 0, canvasjq.width, canvasjq.height);
 			return;
 		}
 		points[drag].xy.x = x;
